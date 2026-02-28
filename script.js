@@ -1,9 +1,4 @@
-/* ===================================================
-   DISNEY REIMAGINED — JavaScript
-   Loading screen, Three.js particles, game, sounds, interactions
-   =================================================== */
 
-// ===== AUDIO SYSTEM =====
 const AudioManager = (() => {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     let enabled = true;
@@ -50,7 +45,7 @@ const AudioManager = (() => {
 })();
 
 
-// ===== LOADING SCREEN =====
+
 (function initLoader() {
     window.addEventListener('load', () => {
         setTimeout(() => {
@@ -63,7 +58,6 @@ const AudioManager = (() => {
 })();
 
 
-// ===== SOUND TOGGLE =====
 (function initSoundToggle() {
     const btn = document.getElementById('sound-toggle');
     if (!btn) return;
@@ -76,7 +70,6 @@ const AudioManager = (() => {
 })();
 
 
-// ===== SPARKLE CURSOR TRAIL =====
 (function initSparkleTrail() {
     const canvas = document.getElementById('sparkle-canvas');
     if (!canvas) return;
@@ -126,7 +119,6 @@ const AudioManager = (() => {
 })();
 
 
-// ===== THREE.JS MAGIC PARTICLES — ENHANCED =====
 (function initThreeJS() {
     const canvas = document.getElementById('magic-canvas');
     if (!canvas || typeof THREE === 'undefined') return;
@@ -140,7 +132,6 @@ const AudioManager = (() => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
 
-    // ─── MOUSE & SCROLL TRACKING ───────────────────────────────────────
     let mouseX = 0, mouseY = 0, scrollRatio = 0, targetScrollRatio = 0;
     let smoothMouseX = 0, smoothMouseY = 0;
     document.addEventListener('mousemove', (e) => {
@@ -152,8 +143,6 @@ const AudioManager = (() => {
         targetScrollRatio = maxScroll > 0 ? window.scrollY / maxScroll : 0;
     });
 
-    // ─── WARP TUNNEL ───────────────────────────────────────────────────
-    // Thousands of stars arranged in a cylinder pointing at the viewer
     const WARP_COUNT = 8000;
     const warpGeo = new THREE.BufferGeometry();
     const warpPos = new Float32Array(WARP_COUNT * 3);
@@ -163,7 +152,7 @@ const AudioManager = (() => {
         [1.0, 0.85, 0.2],  // gold
         [0.29, 0.62, 1.0], // blue
         [1.0, 1.0, 1.0],   // white
-        [1.0, 0.5, 0.8],   // pink
+        [1.0, 0.5, 0.8],   //pink
     ];
     for (let i = 0; i < WARP_COUNT; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -187,7 +176,7 @@ const AudioManager = (() => {
     const warpPoints = new THREE.Points(warpGeo, warpMat);
     scene.add(warpPoints);
 
-    // ─── GALAXY SPIRAL ────────────────────────────────────────────────
+    
     const GALAXY_COUNT = 12000;
     const galaxyGeo = new THREE.BufferGeometry();
     const galaxyPos = new Float32Array(GALAXY_COUNT * 3);
@@ -207,7 +196,7 @@ const AudioManager = (() => {
         galaxyPos[i * 3 + 1] = ry;
         galaxyPos[i * 3 + 2] = Math.sin(branchAngle) * radius + rz - 35;
         const insideness = 1.0 - t;
-        // inner = warm gold, outer = cool blue
+       
         galaxyColors[i * 3] = 0.6 + insideness * 0.4;
         galaxyColors[i * 3 + 1] = 0.45 + insideness * 0.4;
         galaxyColors[i * 3 + 2] = 0.2 + (1 - insideness) * 0.8;
@@ -221,7 +210,7 @@ const AudioManager = (() => {
     const galaxyPoints = new THREE.Points(galaxyGeo, galaxyMat);
     scene.add(galaxyPoints);
 
-    // ─── MAGICAL FLOATING ORBS ────────────────────────────────────────
+   
     const orbGroup = new THREE.Group();
     const orbData = [];
     const orbColors = [0xFFD700, 0x4A9EFF, 0xFF80C0, 0x80FFD4, 0xFFD700];
@@ -234,7 +223,7 @@ const AudioManager = (() => {
         });
         const innerMesh = new THREE.Mesh(innerGeo, innerMat);
 
-        // Glow rings around each orb
+        
         const ringCount = 3;
         const orbRings = [];
         for (let rr = 0; rr < ringCount; rr++) {
@@ -271,7 +260,7 @@ const AudioManager = (() => {
     }
     scene.add(orbGroup);
 
-    // ─── MICKEY SILHOUETTE (point cloud) ──────────────────────────────
+    
     const mickeyGroup = new THREE.Group();
     function spherePts(r, n, ox, oy, oz) {
         const pts = [];
@@ -299,7 +288,6 @@ const AudioManager = (() => {
     const mickeyMesh = new THREE.Points(mickeyGeo, mickeyMat);
     mickeyGroup.add(mickeyMesh);
 
-    // Wireframe shells
     [[2.1, 0, 0, 0], [1.15, -2.1, 2.1, 0], [1.15, 2.1, 2.1, 0]].forEach(([r, px, py, pz]) => {
         const m = new THREE.Mesh(
             new THREE.SphereGeometry(r, 18, 18),
@@ -312,7 +300,6 @@ const AudioManager = (() => {
         mickeyGroup.add(m);
     });
 
-    // Concentric glowing rings around Mickey
     [3.6, 5.2, 7.0].forEach((rr, idx) => {
         const rGeo = new THREE.RingGeometry(rr, rr + 0.05, 96);
         const rMat = new THREE.MeshBasicMaterial({
@@ -329,7 +316,6 @@ const AudioManager = (() => {
     mickeyGroup.position.set(0, 0, -10);
     scene.add(mickeyGroup);
 
-    // ─── BACKGROUND STAR FIELD ─────────────────────────────────────────
     const bgCount = 3500;
     const bgGeo = new THREE.BufferGeometry();
     const bgPos = new Float32Array(bgCount * 3);
@@ -345,7 +331,7 @@ const AudioManager = (() => {
     });
     scene.add(new THREE.Points(bgGeo, bgMat));
 
-    // ─── GOLD PARTICLE CLOUD ──────────────────────────────────────────
+    
     const goldCount = 5000;
     const goldGeo = new THREE.BufferGeometry();
     const goldPos2 = new Float32Array(goldCount * 3);
@@ -362,7 +348,7 @@ const AudioManager = (() => {
     const goldPoints = new THREE.Points(goldGeo, goldMat);
     scene.add(goldPoints);
 
-    // ─── SHOOTING STARS ────────────────────────────────────────────────
+    
     const shootingStars = [];
     function createShootingStar() {
         const geo = new THREE.BufferGeometry();
@@ -386,7 +372,7 @@ const AudioManager = (() => {
     }
     setInterval(createShootingStar, 1800);
 
-    // ─── NEBULA CLOUDS ─────────────────────────────────────────────────
+   
     const nebulaGroup = new THREE.Group();
     [[0x0d1a33, -8, 3, -18], [0x1a0533, 6, -4, -20], [0x0a2040, -3, -6, -22], [0x150825, 10, 5, -16]].forEach(([c, px, py, pz]) => {
         const geo = new THREE.SphereGeometry(3 + Math.random() * 2.5, 10, 10);
@@ -405,7 +391,7 @@ const AudioManager = (() => {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // ─── ANIMATE ───────────────────────────────────────────────────────
+   
     let prevTime = 0;
     function animate() {
         requestAnimationFrame(animate);
@@ -413,20 +399,19 @@ const AudioManager = (() => {
         const dt = time - prevTime;
         prevTime = time;
 
-        // Smooth mouse & scroll
+        
         smoothMouseX += (mouseX - smoothMouseX) * 0.05;
         smoothMouseY += (mouseY - smoothMouseY) * 0.05;
         scrollRatio += (targetScrollRatio - scrollRatio) * 0.04;
 
-        // Camera parallax from mouse (gentle)
         camera.position.x += (smoothMouseX * 1.2 - camera.position.x) * 0.04;
         camera.position.y += (-smoothMouseY * 0.8 - camera.position.y) * 0.04;
-        // Camera zoom/fly on scroll — pull toward galaxy
+        
         const camZ = 8 - scrollRatio * 32;
         camera.position.z += (camZ - camera.position.z) * 0.035;
         camera.lookAt(0, 0, camera.position.z - 10);
 
-        // WARP TUNNEL — activate on scroll
+        
         const warpIntensity = Math.min(1, scrollRatio * 3);
         warpMat.opacity = warpIntensity * 0.7;
         const posArr = warpGeo.attributes.position.array;
@@ -439,37 +424,36 @@ const AudioManager = (() => {
         }
         warpGeo.attributes.position.needsUpdate = true;
 
-        // Galaxy rotation
+        
         galaxyPoints.rotation.y = time * 0.04;
         galaxyMat.opacity = 0.6 + Math.sin(time * 0.3) * 0.15;
 
-        // Mickey animations
+        
         mickeyGroup.rotation.y = time * 0.25 + smoothMouseX * 0.4;
         mickeyGroup.rotation.x = smoothMouseY * 0.2;
         mickeyGroup.position.y = Math.sin(time * 1.1) * 0.45;
         mickeyMat.size = 0.04 + Math.sin(time * 2.5) * 0.012;
-        // Fade Mickey as user scrolls deeper
+        
         mickeyMat.opacity = Math.max(0, 0.95 - scrollRatio * 2.5);
-        // Spin concentric rings at different speeds
+        
         mickeyGroup.children.forEach((child) => {
             if (child.userData.idx !== undefined) {
                 const speeds = [0.8, -0.5, 1.2];
                 child.rotation.z += speeds[child.userData.idx] * dt;
             }
         });
-
-        // Gold particles
+       
         goldPoints.rotation.x = time * 0.025 + smoothMouseY * 0.12;
         goldPoints.rotation.y = time * 0.04 + smoothMouseX * 0.12;
         goldMat.opacity = (0.55 + Math.sin(time * 0.6) * 0.2) * (1 - scrollRatio * 0.7);
 
-        // Floating orbs
+        
         orbData.forEach((od, i) => {
             od.orbitAngle += od.speed * 0.008;
             od.mesh.position.x = Math.cos(od.orbitAngle) * od.orbitRadius;
             od.mesh.position.z = Math.sin(od.orbitAngle) * od.orbitRadius - 5;
             od.mesh.position.y += Math.sin(time * od.speed + od.floatOffset) * 0.006;
-            // Pulse glow rings
+            
             od.rings.forEach((ring, ri) => {
                 ring.rotation.x += (0.4 + ri * 0.3) * dt;
                 ring.rotation.y += (0.3 + ri * 0.2) * dt;
@@ -477,13 +461,13 @@ const AudioManager = (() => {
             });
         });
 
-        // Nebula breathing
+        
         nebulaGroup.children.forEach((m) => {
             const s = 1 + Math.sin(time * m.userData.speed + m.userData.offset) * 0.12;
             m.scale.set(s, s, s);
         });
 
-        // Shooting stars
+       
         shootingStars.forEach((s, i) => {
             s.x += s.vx;
             s.y += s.vy;
@@ -504,7 +488,7 @@ const AudioManager = (() => {
 })();
 
 
-// ===== NAVBAR SCROLL + SOUND =====
+
 (function initNavbar() {
     const navbar = document.getElementById('navbar');
     const toggle = document.getElementById('mobile-toggle');
@@ -533,7 +517,6 @@ const AudioManager = (() => {
 })();
 
 
-// ===== HOVER / CLICK SOUNDS FOR BUTTONS =====
 (function initButtonSounds() {
     document.addEventListener('click', () => AudioManager.resume(), { once: true });
     document.querySelectorAll('.btn-sound, .btn-primary, .btn-outline, .btn-disney-plus').forEach(btn => {
@@ -550,7 +533,7 @@ const AudioManager = (() => {
 })();
 
 
-// ===== SCROLL ANIMATIONS =====
+
 (function initScrollAnimations() {
     const observer = new IntersectionObserver(
         (entries) => {
@@ -568,7 +551,7 @@ const AudioManager = (() => {
 })();
 
 
-// ===== COUNTER ANIMATION =====
+
 (function initCounters() {
     let counted = false;
     const observer = new IntersectionObserver(
@@ -602,7 +585,7 @@ const AudioManager = (() => {
 })();
 
 
-// ===== CHARACTER CARD INTERACTIONS =====
+
 (function initCharacterCards() {
     const cards = document.querySelectorAll('.character-card');
     cards.forEach(card => {
@@ -615,7 +598,7 @@ const AudioManager = (() => {
 })();
 
 
-// ===== SMOOTH SCROLL =====
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -625,7 +608,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 
-// ===== HERO PARALLAX =====
+
 (function initParallax() {
     const heroBg = document.querySelector('.hero-bg img');
     if (!heroBg) return;
@@ -635,7 +618,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 
-// ===== MICKEY CHEESE GAME =====
 (function initMickeyGame() {
     const canvas = document.getElementById('game-canvas');
     if (!canvas) return;
@@ -660,7 +642,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     let cheeses = [];
     let sparkles = [];
 
-    // Mickey position
+    
     const mickey = {
         x: 0, y: 0, w: 80, h: 90,
         mouthOpen: false, mouthTimer: 0,
@@ -696,7 +678,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         mickey.x = mx;
         mickey.y = my;
 
-        // Ears
         ctx.beginPath();
         ctx.arc(mx - 30, my - 30, 20, 0, Math.PI * 2);
         ctx.fillStyle = '#1a1a2e';
@@ -710,14 +691,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         ctx.fill();
         ctx.stroke();
 
-        // Head
+      
         ctx.beginPath();
         ctx.arc(mx, my, 35, 0, Math.PI * 2);
         ctx.fillStyle = '#1a1a2e';
         ctx.fill();
         ctx.stroke();
 
-        // Eyes
+       
         ctx.beginPath();
         ctx.arc(mx - 12, my - 8, 5, 0, Math.PI * 2);
         ctx.fillStyle = '#D4A017';
@@ -726,7 +707,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         ctx.arc(mx + 12, my - 8, 5, 0, Math.PI * 2);
         ctx.fill();
 
-        // Mouth
+       
         ctx.beginPath();
         if (mickey.mouthOpen) {
             ctx.arc(mx, my + 10, 12, 0, Math.PI);
@@ -739,7 +720,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             ctx.stroke();
         }
 
-        // Nose
+        
         ctx.beginPath();
         ctx.ellipse(mx, my + 2, 6, 4, 0, 0, Math.PI * 2);
         ctx.fillStyle = '#D4A017';
@@ -749,7 +730,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     function drawCheese(ctx, c) {
         ctx.save();
         ctx.translate(c.x, c.y);
-        // Cheese wedge
+        
         ctx.beginPath();
         ctx.moveTo(0, -c.size / 2);
         ctx.lineTo(c.size / 2, c.size / 2);
@@ -760,7 +741,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         ctx.strokeStyle = '#DAA520';
         ctx.lineWidth = 2;
         ctx.stroke();
-        // Holes
+        
         ctx.beginPath();
         ctx.arc(-5, 5, 3, 0, Math.PI * 2);
         ctx.arc(8, -2, 2, 0, Math.PI * 2);
@@ -794,7 +775,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             const dx = cx - c.x;
             const dy = cy - c.y;
             if (Math.sqrt(dx * dx + dy * dy) < c.size + 15) {
-                // Toss towards Mickey
+                
                 const angle = Math.atan2(mickey.y - c.y, mickey.x - c.x);
                 c.vx = Math.cos(angle) * 8;
                 c.vy = Math.sin(angle) * 8;
@@ -822,14 +803,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             mickey.mouthOpen = false;
         }
 
-        // Update cheeses
+        
         cheeses.forEach((c, i) => {
             if (c.eaten) return;
             if (c.tossed) {
                 c.x += c.vx;
                 c.y += c.vy;
 
-                // Check collision with Mickey
+                
                 const dx = c.x - mickey.x;
                 const dy = c.y - mickey.y;
                 if (Math.sqrt(dx * dx + dy * dy) < 40) {
@@ -850,7 +831,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                     }
                 }
 
-                // Off screen
+                
                 if (c.y < -50 || c.x < -50 || c.x > W + 50) {
                     c.eaten = true;
                     setTimeout(spawnCheese, 300);
@@ -859,7 +840,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             if (!c.eaten) drawCheese(ctx, c);
         });
 
-        // Sparkles
+        
         sparkles.forEach((s, i) => {
             s.x += s.vx;
             s.y += s.vy;
@@ -873,12 +854,12 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             ctx.globalAlpha = 1;
         });
 
-        // Timer
+       
         if (gameActive && score > 0) {
             timerEl.textContent = ((performance.now() - startTime) / 1000).toFixed(1);
         }
 
-        // Ground line
+        
         ctx.strokeStyle = 'hsla(42, 100%, 55%, 0.15)';
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -892,7 +873,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 })();
 
 
-// ===== HERO PARALLAX & INTERACTIVE ANIMATIONS =====
 (function initHeroAnimations() {
     const hero = document.getElementById('hero');
     const heroImage = document.querySelector('.hero-main-image');
@@ -909,19 +889,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     let targetX = 0, targetY = 0;
     let scrollY = 0;
 
-    // Mouse move parallax
+    
     document.addEventListener('mousemove', (e) => {
         mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
         mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     });
 
-    // Scroll parallax
+   
     window.addEventListener('scroll', () => {
         const heroRect = hero.getBoundingClientRect();
         const heroHeight = heroRect.height;
         scrollY = Math.max(0, -heroRect.top);
 
-        // Parallax effect on scroll
+      
         if (heroRect.top < window.innerHeight && heroRect.bottom > 0) {
             const scrollProgress = scrollY / heroHeight;
             if (heroImageWrapper) {
@@ -930,29 +910,28 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 
-    // Smooth mouse parallax animation
+
     function animateParallax() {
         requestAnimationFrame(animateParallax);
 
-        // Smooth interpolation
         targetX += (mouseX - targetX) * 0.05;
         targetY += (mouseY - targetY) * 0.05;
 
-        // Apply parallax to image
+   
         if (heroImage) {
             const moveX = targetX * 20 * parallaxIntensity;
             const moveY = targetY * 20 * parallaxIntensity;
             heroImage.style.transform = `translate(${moveX}px, ${moveY}px)`;
         }
 
-        // Parallax to content (subtle)
+    
         if (heroContent && !isMobile) {
             const contentMoveX = targetX * -10 * parallaxIntensity;
             const contentMoveY = targetY * -10 * parallaxIntensity;
             heroContent.style.transform = `translate(${contentMoveX}px, ${contentMoveY}px)`;
         }
 
-        // Animate sparkles based on mouse (only on desktop)
+        
         if (!isMobile) {
             sparkles.forEach((sparkle, index) => {
                 const intensity = (index % 2 === 0) ? 0.3 : 0.5;
@@ -965,7 +944,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
     animateParallax();
 
-    // Scroll indicator click
+    
     const scrollIndicator = document.querySelector('.scroll-indicator');
     if (scrollIndicator) {
         scrollIndicator.addEventListener('click', () => {
@@ -977,7 +956,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         });
     }
 
-    // Add mouse enter/leave effects
+   
     hero.addEventListener('mouseenter', () => {
         if (heroImage) {
             heroImage.style.transition = 'transform 0.3s ease';
@@ -990,7 +969,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 
-    // Intersection Observer for hero animations
+   
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px'
@@ -1012,9 +991,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 console.log('✨ Disney Reimagined — Loaded successfully');
 
-// ═══════════════════════════════════════════════════════
-//   CHARACTER PICKER + EMOJI CURSOR
-// ═══════════════════════════════════════════════════════
+
 (function initCharPicker() {
 
     const CHARS = {
@@ -1031,11 +1008,11 @@ console.log('✨ Disney Reimagined — Loaded successfully');
 
     let chosen = null;
     let raf = null;
-    // Smooth cursor position
-    let cx = -200, cy = -200;   // current rendered position
-    let tx = -200, ty = -200;   // mouse target
+    
+    let cx = -200, cy = -200;   
+    let tx = -200, ty = -200;   
 
-    // Track mouse for emoji cursor
+    
     document.addEventListener('mousemove', (e) => {
         tx = e.clientX;
         ty = e.clientY;
@@ -1043,7 +1020,7 @@ console.log('✨ Disney Reimagined — Loaded successfully');
 
     function animCursor() {
         if (chosen) {
-            // Smooth lag follow — charming for kids
+            
             cx += (tx - cx) * 0.18;
             cy += (ty - cy) * 0.18;
             cursor.style.left = cx + 'px';
@@ -1053,7 +1030,7 @@ console.log('✨ Disney Reimagined — Loaded successfully');
     }
     animCursor();
 
-    // Hover sparkle burst on pick btns
+    
     document.querySelectorAll('.char-pick-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             AudioManager.resume();
@@ -1063,7 +1040,7 @@ console.log('✨ Disney Reimagined — Loaded successfully');
             const data = CHARS[key];
             if (!data) return;
 
-            // Toggle off if re-clicking same
+            
             if (chosen === key) {
                 resetCharCursor();
                 return;
@@ -1071,29 +1048,27 @@ console.log('✨ Disney Reimagined — Loaded successfully');
 
             chosen = key;
 
-            // Visual state on buttons
+          
             document.querySelectorAll('.char-pick-btn').forEach(b => b.classList.remove('chosen'));
             btn.classList.add('chosen');
 
-            // Show cursor
+           
             cursor.textContent = data.emoji;
             cursor.style.display = 'block';
             document.body.style.cursor = 'none';
 
-            // Show active bar
             activeEmoji.textContent = data.emoji;
             activeName.textContent = data.msg;
             activeEl.classList.add('visible');
 
-            // Tiny confetti burst from the button
             burstFromBtn(btn, data.emoji);
         });
 
-        // Sound on hover
+      
         btn.addEventListener('mouseenter', () => AudioManager.hover());
     });
 
-    // Confetti emoji burst
+  
     function burstFromBtn(btn, emoji) {
         const rect = btn.getBoundingClientRect();
         for (let i = 0; i < 8; i++) {
@@ -1120,7 +1095,6 @@ console.log('✨ Disney Reimagined — Loaded successfully');
         }
     }
 
-    // Global reset function (called by Reset button onclick)
     window.resetCharCursor = function () {
         chosen = null;
         cursor.style.display = 'none';
@@ -1133,9 +1107,7 @@ console.log('✨ Disney Reimagined — Loaded successfully');
 })();
 
 
-// ═══════════════════════════════════════════════════════
-//   COMIC CARD DECK — SWIPE / CLICK / DRAG
-// ═══════════════════════════════════════════════════════
+
 (function initComicDeck() {
 
     const deck = document.getElementById('comic-deck');
@@ -1147,11 +1119,10 @@ console.log('✨ Disney Reimagined — Loaded successfully');
     const hintEl = document.getElementById('comic-hint');
 
     const TOTAL = 5;
-    let current = 0;   // index of the "top" card (0 = page 1)
+    let current = 0;  
     let animating = false;
 
-    // Cards ordered front → back (page 1 first in DOM = last child = visually top)
-    // We reverse to get them in visual order: cards[0] = page1 (top), cards[4] = page5 (bottom)
+   
     function getCards() {
         return [...deck.querySelectorAll('.comic-card')].reverse();
     }
@@ -1165,21 +1136,21 @@ console.log('✨ Disney Reimagined — Loaded successfully');
         if (nextBtn) nextBtn.disabled = current === TOTAL - 1;
     }
 
-    // Lay out the deck positions based on current
+    
     function layoutCards(animated) {
         getCards().forEach((card, i) => {
-            const relIdx = i - current; // negative = already passed, 0 = top, positive = behind
+            const relIdx = i - current; 
 
             card.classList.remove('slide-out-left', 'slide-out-right', 'promote');
 
             if (relIdx < 0) {
-                // Already swiped — hide behind everything
+                
                 card.style.transform = 'translateX(-110%) rotate(-6deg)';
                 card.style.opacity = '0';
                 card.style.zIndex = '0';
                 card.style.pointerEvents = 'none';
             } else {
-                const stackI = relIdx; // 0 = top, 1 = next, ...
+                const stackI = relIdx; 
                 card.style.transform = `
                     translateX(${stackI * 6}px)
                     translateY(${stackI * 6}px)
@@ -1226,7 +1197,7 @@ console.log('✨ Disney Reimagined — Loaded successfully');
         updateDots();
         updateButtons();
 
-        // Snap the "coming back" card into place
+      
         const cards = getCards();
         const topCard = cards[current];
         topCard.classList.remove('slide-out-left', 'slide-out-right');
@@ -1243,11 +1214,11 @@ console.log('✨ Disney Reimagined — Loaded successfully');
         });
     }
 
-    // Next / Prev buttons
+ 
     if (nextBtn) nextBtn.addEventListener('click', goNext);
     if (prevBtn) prevBtn.addEventListener('click', goPrev);
 
-    // Dot navigation
+    
     dots.forEach((dot, i) => {
         dot.addEventListener('click', () => {
             if (animating || i === current) return;
@@ -1256,13 +1227,13 @@ console.log('✨ Disney Reimagined — Loaded successfully');
         });
     });
 
-    // Keyboard arrows
+  
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight') goNext();
         if (e.key === 'ArrowLeft') goPrev();
     });
 
-    // ── SWIPE / DRAG GESTURE ───────────────────
+ 
     let dragStartX = null, dragCurrentX = 0, isDragging = false;
     const SWIPE_THRESHOLD = 60;
 
@@ -1293,26 +1264,23 @@ console.log('✨ Disney Reimagined — Loaded successfully');
         if (Math.abs(dragCurrentX) > SWIPE_THRESHOLD) {
             dragCurrentX > 0 ? goPrev() : goNext();
         } else {
-            // Snap back
             layoutCards(true);
         }
         dragStartX = null;
         dragCurrentX = 0;
     }
 
-    // Mouse events
     deck.addEventListener('mousedown', e => onDragStart(e.clientX));
     window.addEventListener('mousemove', e => { if (isDragging) onDragMove(e.clientX); });
     window.addEventListener('mouseup', () => onDragEnd());
 
-    // Touch events
     deck.addEventListener('touchstart', e => onDragStart(e.touches[0].clientX), { passive: true });
     deck.addEventListener('touchmove', e => onDragMove(e.touches[0].clientX), { passive: true });
     deck.addEventListener('touchend', () => onDragEnd());
 
-    // Init
     updateDots();
     updateButtons();
     layoutCards(false);
+
 
 })();
