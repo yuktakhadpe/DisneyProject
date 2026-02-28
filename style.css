@@ -1,4 +1,4 @@
-/* ===== DESIGN SYSTEM ===== */
+
 :root {
     --bg: hsl(222, 47%, 6%);
     --bg-light: hsl(222, 40%, 12%);
@@ -22,7 +22,7 @@
     --text-glow: 0 0 20px hsla(42, 100%, 55%, 0.5), 0 0 40px hsla(42, 100%, 55%, 0.2);
 }
 
-/* ===== RESET ===== */
+
 *,
 *::before,
 *::after {
@@ -79,7 +79,7 @@ ul {
     padding: 0 1.5rem;
 }
 
-/* ===== SCROLLBAR ===== */
+
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -104,7 +104,6 @@ ul {
     background-clip: text;
 }
 
-/* ===== LOADING SCREEN ===== */
 #loading-screen {
     position: fixed;
     inset: 0;
@@ -185,7 +184,7 @@ ul {
     }
 }
 
-/* ===== THREE.JS CANVAS ===== */
+
 #magic-canvas {
     position: fixed;
     top: 0;
@@ -196,7 +195,7 @@ ul {
     pointer-events: none;
 }
 
-/* ===== SPARKLE CURSOR ===== */
+
 #sparkle-canvas {
     position: fixed;
     top: 0;
@@ -207,7 +206,7 @@ ul {
     pointer-events: none;
 }
 
-/* ===== NAVBAR ===== */
+
 #navbar {
     position: fixed;
     top: 0;
@@ -363,7 +362,7 @@ ul {
     transform: rotate(-45deg) translateY(-7px);
 }
 
-/* ===== HERO ===== */
+
 .hero {
     position: relative;
     min-height: 100vh;
@@ -431,7 +430,7 @@ ul {
     z-index: 2;
 }
 
-/* Floating Sparkles */
+
 .floating-sparkle {
     position: absolute;
     width: 8px;
@@ -617,7 +616,6 @@ ul {
     color: var(--gold);
 }
 
-/* Hero Decorations */
 .hero-decoration {
     position: absolute;
     width: 200px;
@@ -642,7 +640,7 @@ ul {
     animation-delay: 2s;
 }
 
-/* Hero Animations */
+
 @keyframes heroImageZoom {
     0% {
         transform: scale(1);
@@ -739,7 +737,7 @@ ul {
     }
 }
 
-/* Hero Text Animations */
+
 .hero-fade-in {
     opacity: 0;
     animation: fadeInUp 1s ease 0.5s forwards;
@@ -784,7 +782,6 @@ ul {
     }
 }
 
-/* ===== SECTION COMMON ===== */
 .section-header {
     text-align: center;
     margin-bottom: 5rem;
@@ -808,7 +805,7 @@ ul {
     background-clip: text;
 }
 
-/* ===== CHARACTERS ===== */
+
 .characters {
     padding: var(--section-pad);
     position: relative;
@@ -932,7 +929,6 @@ ul {
     opacity: 1;
 }
 
-/* ===== STATS ===== */
 .stats {
     padding: var(--section-pad);
     position: relative;
@@ -982,7 +978,7 @@ ul {
     margin-top: 0.5rem;
 }
 
-/* ===== GAME SECTION ===== */
+
 .game-section {
     padding: var(--section-pad);
     position: relative;
@@ -1030,7 +1026,7 @@ ul {
     border-top: 1px solid var(--border-gold);
 }
 
-/* ===== WORLDS / STORY CARDS ===== */
+
 .worlds {
     padding: var(--section-pad);
 }
@@ -1203,7 +1199,7 @@ footer {
     color: var(--gold);
 }
 
-/* ===== ANIMATIONS ===== */
+
 @keyframes float {
 
     0%,
@@ -1253,7 +1249,7 @@ footer {
     transform: translateY(0);
 }
 
-/* ===== RESPONSIVE ===== */
+
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -1349,9 +1345,7 @@ footer {
     }
 }
 
-/* ═══════════════════════════════════════════════════════
-   CHARACTER PICKER + EMOJI CURSOR
-   ═══════════════════════════════════════════════════════ */
+
 
 .char-picker-section {
     padding: 8rem 0 6rem;
@@ -1365,7 +1359,7 @@ footer {
     font-size: 1rem;
 }
 
-/* Grid of 4 character pick buttons */
+
 .char-picker-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1401,7 +1395,7 @@ footer {
     transform: translateY(-8px) scale(1.04);
 }
 
-/* Aura glow blob behind emoji */
+
 .char-pick-aura {
     position: absolute;
     top: 1rem;
@@ -1436,7 +1430,7 @@ footer {
     transform: scale(1.15) translateY(-4px);
 }
 
-/* Spinning ring on hover */
+
 .char-pick-ring {
     position: absolute;
     top: 50%;
@@ -1481,7 +1475,7 @@ footer {
     z-index: 1;
 }
 
-/* Checkmark shown when chosen */
+
 .char-pick-check {
     position: absolute;
     top: 0.6rem;
@@ -1506,7 +1500,7 @@ footer {
     transform: scale(1);
 }
 
-/* Active character display bar */
+
 .char-pick-active {
     display: none;
     margin: 0 auto;
@@ -1592,7 +1586,7 @@ footer {
     color: var(--gold);
 }
 
-/* ── EMOJI CURSOR ─────────────────────────── */
+
 .emoji-cursor {
     position: fixed;
     pointer-events: none;
@@ -1604,13 +1598,11 @@ footer {
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
     display: none;
     will-change: transform;
-    /* No CSS transition on position — handled by JS for snappiness */
+    
 }
 
 
-/* ═══════════════════════════════════════════════════════
-   COMIC SWIPE CARD DECK
-   ═══════════════════════════════════════════════════════ */
+
 
 .comic-section {
     padding: 0 0 8rem;
@@ -1622,7 +1614,6 @@ footer {
     font-size: 1rem;
 }
 
-/* Stage wrapper */
 .comic-stage {
     display: flex;
     flex-direction: column;
@@ -1631,7 +1622,6 @@ footer {
     margin-top: 3rem;
 }
 
-/* The card deck */
 .comic-deck {
     position: relative;
     width: 480px;
@@ -1644,7 +1634,7 @@ footer {
     cursor: grabbing;
 }
 
-/* Individual cards — stacked via transform */
+
 .comic-card {
     position: absolute;
     inset: 0;
@@ -1652,13 +1642,13 @@ footer {
     border: 1px solid var(--border-gold);
     overflow: hidden;
     transition: transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.45s ease, box-shadow 0.35s;
-    /* default stacked position — overridden by JS */
+
     transform:
         translateX(calc(var(--stack-i, 0) * 6px)) translateY(calc(var(--stack-i, 0) * 6px)) scale(calc(1 - var(--stack-i, 0) * 0.04));
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
-/* Top card (stack-i = 0) is fully visible, others peek behind */
+
 .comic-card[data-page="1"] {
     z-index: 5;
 }
@@ -1679,7 +1669,7 @@ footer {
     z-index: 1;
 }
 
-/* Slide-out animation class */
+
 .comic-card.slide-out-left {
     transform: translateX(-120%) rotate(-8deg) !important;
     opacity: 0 !important;
@@ -1696,7 +1686,7 @@ footer {
     transition: transform 0.45s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.35s;
 }
 
-/* Inner card content */
+
 .comic-card-inner {
     width: 100%;
     height: 100%;
@@ -1707,7 +1697,7 @@ footer {
     position: relative;
 }
 
-/* Faint halftone dot texture overlay */
+
 .comic-card-inner::before {
     content: '';
     position: absolute;
@@ -1768,7 +1758,7 @@ footer {
     opacity: 0.7;
 }
 
-/* Page-turn fold corner decoration */
+
 .comic-card::after {
     content: '';
     position: absolute;
@@ -1786,7 +1776,6 @@ footer {
     border-width: 0 0 48px 48px;
 }
 
-/* Controls */
 .comic-controls {
     display: flex;
     align-items: center;
@@ -1847,12 +1836,12 @@ footer {
     letter-spacing: 0.06em;
 }
 
-/* Drag ghost effect */
+
 .comic-deck.dragging .comic-card:first-child {
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
 }
 
-/* ── RESPONSIVE ──────────────────────────────── */
+
 @media (max-width: 900px) {
     .char-picker-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1890,4 +1879,5 @@ footer {
     .char-pick-emoji {
         font-size: 3rem;
     }
+
 }
