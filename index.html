@@ -10,42 +10,430 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Quicksand:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
+    <style>
+        #global-sparkle-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .amb-star {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            animation: ambTwinkle var(--dur) ease-in-out var(--delay) infinite alternate;
+            opacity: 0;
+        }
+        @keyframes ambTwinkle {
+            0%   { opacity: 0; transform: scale(0.4); }
+            50%  { opacity: var(--peak); }
+            100% { opacity: 0.1; transform: scale(1.2); }
+        }
+        .amb-light {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: ambDrift var(--ldur) ease-in-out var(--ldelay) infinite alternate;
+            opacity: 0.04;
+        }
+        @keyframes ambDrift {
+            from { transform: translate(0, 0) scale(1); opacity: 0.04; }
+            to   { transform: translate(var(--dx), var(--dy)) scale(1.2); opacity: 0.08; }
+        }
+        .game-section { position: relative; overflow: hidden; }
+        .game-wrapper {
+            background: linear-gradient(160deg, hsl(222,50%,6%) 0%, hsl(240,40%,9%) 100%);
+            border: 1px solid hsla(42,100%,55%,0.2);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 60px hsla(42,100%,55%,0.08), 0 20px 60px rgba(0,0,0,0.6);
+            position: relative;
+        }
+        .game-wrapper::before {
+            content:'';
+            position:absolute;
+            inset:0;
+            border-radius:1.5rem;
+            background: radial-gradient(ellipse at 50% 0%, hsla(42,100%,55%,0.06) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        .game-hud {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1.25rem;
+            background: hsla(222,50%,8%,0.8);
+            border-radius: 1rem;
+            border: 1px solid hsla(42,100%,55%,0.15);
+            flex-wrap: wrap;
+        }
+        .game-score, .game-timer {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .game-score span, .game-timer span {
+            color: white;
+            font-size: 1.4rem;
+            text-shadow: 0 0 10px hsla(42,100%,55%,0.5);
+        }
+        #game-canvas {
+            border-radius: 1rem;
+            width: 100%;
+            display: block;
+            background: radial-gradient(ellipse at 50% 30%, hsl(222,55%,10%) 0%, hsl(220,50%,6%) 100%);
+            border: 1px solid hsla(42,100%,55%,0.1);
+        }
+        .game-hint {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: var(--gold-light);
+            letter-spacing: 0.04em;
+            min-height: 1.5rem;
+        }
+        .game-lives {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+        .game-level {
+            margin-left: auto;
+            font-family: var(--font-display);
+            color: var(--fg-muted);
+            font-size: 0.85rem;
+        }
+        #whats-next {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9500;
+            display: flex;
+            align-items: flex-end;
+            gap: 0;
+            pointer-events: auto;
+            transition: opacity 0.4s, transform 0.4s;
+        }
+        #whats-next.hidden-nav {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        #wn-char-bubble {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            flex-shrink: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+        #wn-char-bubble .char-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            background: linear-gradient(145deg, hsla(222,55%,10%,0.95), hsla(240,50%,14%,0.95));
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 0 0 4px hsla(42,100%,55%,0.15), 0 8px 30px rgba(0,0,0,0.6);
+            animation: wnBob 2.8s ease-in-out infinite;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        #wn-char-bubble:hover .char-ring {
+            box-shadow: 0 0 0 4px hsla(42,100%,55%,0.4), 0 0 30px hsla(42,100%,55%,0.3), 0 8px 30px rgba(0,0,0,0.7);
+            transform: scale(1.08);
+        }
+        @keyframes wnBob {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-7px); }
+        }
+        #wn-char-bubble .char-sparkle-ring {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px dashed hsla(42,100%,55%,0.35);
+            animation: wnSpin 8s linear infinite;
+        }
+        @keyframes wnSpin { to { transform: rotate(360deg); } }
+        #wn-card {
+            position: absolute;
+            bottom: calc(100% + 12px);
+            right: 0;
+            width: 280px;
+            background: linear-gradient(145deg, hsla(222,55%,7%,0.97), hsla(240,50%,11%,0.97));
+            border: 1px solid hsla(42,100%,55%,0.3);
+            border-radius: 1.2rem 1.2rem 0.4rem 1.2rem;
+            padding: 1.1rem 1.25rem 1rem;
+            box-shadow: 0 0 40px hsla(42,100%,55%,0.1), 0 16px 60px rgba(0,0,0,0.7);
+            backdrop-filter: blur(20px);
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(10px) scale(0.95);
+            transform-origin: bottom right;
+            transition: opacity 0.3s cubic-bezier(0.34,1.2,0.64,1), transform 0.3s cubic-bezier(0.34,1.2,0.64,1);
+        }
+        #wn-card::after {
+            content: '';
+            position: absolute;
+            bottom: -9px;
+            right: 18px;
+            width: 16px;
+            height: 16px;
+            background: hsla(240,50%,11%,0.97);
+            border-right: 1px solid hsla(42,100%,55%,0.3);
+            border-bottom: 1px solid hsla(42,100%,55%,0.3);
+            transform: rotate(45deg);
+        }
+        #wn-card.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        #wn-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(ellipse at 100% 0%, hsla(42,100%,55%,0.07) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .wn-label {
+            font-size: 0.55rem;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .wn-label::before {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, hsla(42,100%,55%,0.4));
+        }
+        .wn-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to left, transparent, hsla(42,100%,55%,0.4));
+        }
+        .wn-char-says {
+            font-size: 0.7rem;
+            color: var(--fg-muted);
+            margin-bottom: 0.35rem;
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .wn-char-says .char-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: hsla(42,100%,55%,0.12);
+            border: 1px solid hsla(42,100%,55%,0.25);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        .wn-section-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            display: block;
+            filter: drop-shadow(0 0 8px hsla(42,100%,55%,0.3));
+        }
+        .wn-section-title {
+            font-family: var(--font-display) !important;
+            font-size: 1.15rem;
+            color: var(--fg);
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+        .wn-section-desc {
+            font-size: 0.75rem;
+            color: var(--fg-muted);
+            line-height: 1.5;
+            margin-bottom: 0.85rem;
+        }
+        .wn-progress {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            margin-bottom: 0.85rem;
+        }
+        .wn-pill {
+            height: 3px;
+            border-radius: 2px;
+            background: hsla(42,100%,55%,0.15);
+            transition: all 0.4s cubic-bezier(0.34,1.2,0.64,1);
+            flex: 1;
+        }
+        .wn-pill.done { background: hsla(42,100%,55%,0.4); }
+        .wn-pill.current {
+            background: var(--gold);
+            box-shadow: 0 0 8px hsla(42,100%,55%,0.6);
+            flex: 2;
+        }
+        .wn-goto {
+            width: 100%;
+            padding: 0.55rem;
+            background: linear-gradient(135deg, hsla(42,100%,55%,0.15), hsla(42,100%,55%,0.08));
+            border: 1px solid hsla(42,100%,55%,0.35);
+            border-radius: 0.6rem;
+            color: var(--gold-light);
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        .wn-goto:hover {
+            background: linear-gradient(135deg, hsla(42,100%,55%,0.25), hsla(42,100%,55%,0.15));
+            border-color: var(--gold);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px hsla(42,100%,55%,0.2);
+        }
+        .wn-goto svg {
+            transition: transform 0.2s;
+        }
+        .wn-goto:hover svg {
+            transform: translateX(3px);
+        }
+        @media (max-width: 768px) {
+            #whats-next { bottom: 1rem; right: 1rem; }
+            #wn-char-bubble { width: 54px; height: 54px; }
+            #wn-char-bubble .char-ring { font-size: 1.5rem; }
+            #wn-card { width: 240px; }
+        }
+        #tink-game-canvas {
+            border-radius: 1rem;
+            width: 100%;
+            display: block;
+            border: 1px solid hsla(280,80%,60%,0.2);
+            background: radial-gradient(ellipse at 50% 30%, hsl(240,50%,8%) 0%, hsl(230,50%,4%) 100%);
+            cursor: crosshair;
+        }
+        .tink-hud {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1.25rem;
+            background: hsla(240,50%,6%,0.9);
+            border-radius: 1rem;
+            border: 1px solid hsla(280,80%,60%,0.2);
+            flex-wrap: wrap;
+        }
+        .tink-stat {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            color: #c084fc;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+        .tink-stat span {
+            color: white;
+            font-size: 1.3rem;
+            text-shadow: 0 0 12px rgba(192,132,252,0.7);
+        }
+        .tink-hint {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #e9d5ff;
+            letter-spacing: 0.04em;
+            min-height: 1.5rem;
+        }
+        .tink-game-wrapper {
+            background: linear-gradient(160deg, hsl(240,55%,5%) 0%, hsl(260,40%,8%) 100%);
+            border: 1px solid hsla(280,80%,60%,0.2);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 60px hsla(280,80%,60%,0.06), 0 20px 60px rgba(0,0,0,0.6);
+            position: relative;
+        }
+        .tink-game-wrapper::before {
+            content:'';
+            position:absolute;
+            inset:0;
+            border-radius:1.5rem;
+            background: radial-gradient(ellipse at 50% 0%, hsla(280,80%,60%,0.05) 0%, transparent 70%);
+            pointer-events:none;
+        }
+        .game-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: hsla(222,50%,6%,0.6);
+            padding: 0.4rem;
+            border-radius: 1rem;
+            border: 1px solid hsla(42,100%,55%,0.1);
+        }
+        .game-tab {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            border: none;
+            background: transparent;
+            color: var(--fg-muted);
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .game-tab.active {
+            background: hsla(42,100%,55%,0.12);
+            color: var(--gold);
+            border: 1px solid hsla(42,100%,55%,0.3);
+            box-shadow: 0 0 20px hsla(42,100%,55%,0.1);
+        }
+        .game-panel { display: none; }
+        .game-panel.active { display: block; }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
 </head>
 
 <body>
-
-    
+    <div id="global-sparkle-layer" aria-hidden="true"></div>
     <div id="loading-screen">
         <div class="loader-content">
             <svg class="castle-svg" viewBox="0 0 200 180" fill="none" stroke="var(--gold)" stroke-width="1.2">
-                
                 <line x1="60" y1="180" x2="60" y2="60" class="castle-line" />
                 <line x1="140" y1="180" x2="140" y2="60" class="castle-line" />
-               
-                
                 <line x1="100" y1="180" x2="100" y2="30" class="castle-line" />
                 <polygon points="100,10 90,30 110,30" class="castle-line" />
-                 
                 <line x1="75" y1="180" x2="75" y2="70" class="castle-line" />
                 <polygon points="75,50 68,70 82,70" class="castle-line" />
                 <line x1="125" y1="180" x2="125" y2="70" class="castle-line" />
                 <polygon points="125,50 118,70 132,70" class="castle-line" />
-                
                 <line x1="45" y1="180" x2="45" y2="90" class="castle-line" />
                 <polygon points="45,72 38,90 52,90" class="castle-line" />
                 <line x1="155" y1="180" x2="155" y2="90" class="castle-line" />
                 <polygon points="155,72 148,90 162,90" class="castle-line" />
-                
                 <rect x="50" y="110" width="100" height="70" rx="2" class="castle-line" />
-                
                 <path d="M90,180 L90,145 Q100,130 110,145 L110,180" class="castle-line" />
-                
                 <circle cx="100" cy="150" r="5" class="castle-line" />
-                
                 <rect x="65" y="120" width="8" height="12" rx="4" class="castle-line" />
                 <rect x="127" y="120" width="8" height="12" rx="4" class="castle-line" />
-                
                 <line x1="30" y1="180" x2="170" y2="180" class="castle-line" />
             </svg>
             <p class="loader-text">W H E R E &nbsp; M A G I C &nbsp; L I V E S</p>
@@ -54,13 +442,31 @@
             </div>
         </div>
     </div>
-
-    
     <canvas id="magic-canvas"></canvas>
-
     <canvas id="sparkle-canvas"></canvas>
-
-    
+    <div id="whats-next" aria-label="What's coming next on this page">
+        <div id="wn-char-bubble" role="button" aria-expanded="false" aria-controls="wn-card" tabindex="0">
+            <div class="char-sparkle-ring"></div>
+            <div class="char-ring" id="wn-char-emoji">🐭</div>
+        </div>
+        <div id="wn-card" role="region" aria-live="polite">
+            <div class="wn-label">Coming Up Next</div>
+            <div class="wn-char-says">
+                <span class="char-dot" id="wn-tiny-char">🐭</span>
+                <span id="wn-char-name">Mickey</span> says…
+            </div>
+            <span class="wn-section-icon" id="wn-icon">🦁</span>
+            <h3 class="wn-section-title" id="wn-title">Beloved Characters</h3>
+            <p class="wn-section-desc" id="wn-desc">Meet Mickey, Simba, Moana and all the friends who make Disney magic real.</p>
+            <div class="wn-progress" id="wn-progress"></div>
+            <button class="wn-goto" id="wn-goto-btn">
+                Take Me There
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </button>
+        </div>
+    </div>
     <nav id="navbar">
         <div class="nav-inner">
             <a href="#" class="nav-logo">
@@ -71,6 +477,8 @@
                 <a href="#stats" class="nav-sound">Legacy</a>
                 <a href="#worlds" class="nav-sound">Worlds</a>
                 <a href="#game" class="nav-sound">Play</a>
+                <a href="#story-adventure" class="nav-sound">Story</a>
+                <a href="#founders" class="nav-sound">Dreamers</a>
                 <a href="#footer" class="nav-sound">Connect</a>
                 <button class="btn-disney-plus nav-sound">Disney+</button>
             </div>
@@ -95,18 +503,14 @@
             </div>
         </div>
     </nav>
-
-
     <section class="hero" id="hero">
         <div class="hero-bg">
             <div class="hero-image-wrapper">
-                <img src="Gemini_Generated_Image_gtk58ogtk58ogtk5.png" alt="Magical Princess and Castle"
-                    class="hero-main-image" />
+                <img src="images/hero-disney.jpg" alt="Disney Magic" class="hero-main-image" />
                 <div class="hero-image-glow"></div>
             </div>
             <div class="hero-overlay"></div>
             <div class="hero-overlay-gradient"></div>
-            
             <div class="floating-sparkle sparkle-1"></div>
             <div class="floating-sparkle sparkle-2"></div>
             <div class="floating-sparkle sparkle-3"></div>
@@ -142,12 +546,9 @@
                 <polyline points="6 9 12 15 18 9" />
             </svg>
         </div>
-        
         <div class="hero-decoration decoration-left"></div>
         <div class="hero-decoration decoration-right"></div>
     </section>
-
- 
     <section class="characters" id="characters">
         <div class="container">
             <div class="section-header animate-on-scroll">
@@ -197,8 +598,6 @@
             </div>
         </div>
     </section>
-
-   
     <section class="stats" id="stats">
         <div class="stats-bg"></div>
         <div class="container stats-inner">
@@ -229,9 +628,6 @@
             </div>
         </div>
     </section>
-
-
-   
     <section class="char-picker-section" id="char-picker">
         <div class="container">
             <div class="section-header animate-on-scroll">
@@ -240,10 +636,7 @@
                 <p class="char-picker-subtitle">Pick your favourite Disney friend — they'll follow your cursor
                     everywhere!</p>
             </div>
-
             <div class="char-picker-grid animate-on-scroll">
-
-                
                 <button class="char-pick-btn" data-char="mickey" aria-label="Choose Mickey Mouse">
                     <div class="char-pick-aura" style="--aura-color:#FFD700"></div>
                     <div class="char-pick-emoji">🐭</div>
@@ -252,7 +645,6 @@
                     <span class="char-pick-world">Toontown</span>
                     <div class="char-pick-check">✓</div>
                 </button>
-
                 <button class="char-pick-btn" data-char="moana" aria-label="Choose Moana">
                     <div class="char-pick-aura" style="--aura-color:#00C6FF"></div>
                     <div class="char-pick-emoji">🌊</div>
@@ -261,8 +653,6 @@
                     <span class="char-pick-world">Motunui</span>
                     <div class="char-pick-check">✓</div>
                 </button>
-
-                
                 <button class="char-pick-btn" data-char="simba" aria-label="Choose Simba">
                     <div class="char-pick-aura" style="--aura-color:#FF9500"></div>
                     <div class="char-pick-emoji">🦁</div>
@@ -271,8 +661,6 @@
                     <span class="char-pick-world">Pride Lands</span>
                     <div class="char-pick-check">✓</div>
                 </button>
-
-              
                 <button class="char-pick-btn" data-char="elsa" aria-label="Choose Elsa">
                     <div class="char-pick-aura" style="--aura-color:#A8EDFF"></div>
                     <div class="char-pick-emoji">❄️</div>
@@ -281,10 +669,7 @@
                     <span class="char-pick-world">Arendelle</span>
                     <div class="char-pick-check">✓</div>
                 </button>
-
             </div>
-
-          
             <div class="char-pick-active animate-on-scroll" id="char-pick-active">
                 <div class="char-pick-active-inner">
                     <span class="char-pick-active-emoji" id="char-active-emoji">🐭</span>
@@ -296,11 +681,8 @@
                 </div>
             </div>
         </div>
-
-        
         <div class="emoji-cursor" id="emoji-cursor" aria-hidden="true"></div>
     </section>
-
     <section class="comic-section" id="comic-section">
         <div class="container">
             <div class="section-header animate-on-scroll">
@@ -308,13 +690,8 @@
                 <h2 class="section-title">Story Time!</h2>
                 <p class="comic-subtitle">Swipe right to flip through the pages ✨</p>
             </div>
-
             <div class="comic-stage animate-on-scroll">
-
-            
                 <div class="comic-deck" id="comic-deck">
-
-                  
                     <div class="comic-card" data-page="5" style="--stack-i:4">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#0a0020,#1a0040)">
                             <div class="comic-page-num">Page 5 · The End</div>
@@ -330,8 +707,6 @@
                             </div>
                         </div>
                     </div>
-
-                  
                     <div class="comic-card" data-page="4" style="--stack-i:3">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#001a2e,#004466)">
                             <div class="comic-page-num">Page 4 · The Challenge</div>
@@ -346,8 +721,6 @@
                             </div>
                         </div>
                     </div>
-
-                    
                     <div class="comic-card" data-page="3" style="--stack-i:2">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#0f1a00,#2a4400)">
                             <div class="comic-page-num">Page 3 · The Rescue</div>
@@ -363,8 +736,6 @@
                             </div>
                         </div>
                     </div>
-
-                   
                     <div class="comic-card" data-page="2" style="--stack-i:1">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#001028,#002a5c)">
                             <div class="comic-page-num">Page 2 · The Journey</div>
@@ -380,8 +751,6 @@
                             </div>
                         </div>
                     </div>
-
-                    
                     <div class="comic-card" data-page="1" style="--stack-i:0">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#1a0800,#5c2800)">
                             <div class="comic-page-num">Page 1 · The Beginning</div>
@@ -397,10 +766,7 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-               
                 <div class="comic-controls">
                     <button class="comic-btn comic-btn-prev" id="comic-prev" aria-label="Previous page">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -422,42 +788,57 @@
                         </svg>
                     </button>
                 </div>
-
                 <p class="comic-swipe-hint" id="comic-hint">👆 Swipe or click → to turn the page</p>
-
             </div>
         </div>
     </section>
-
-    
     <section class="game-section" id="game">
         <div class="container">
             <div class="section-header animate-on-scroll">
-                <p class="section-tag">Play a Game</p>
-                <h2 class="section-title">Feed Mickey!</h2>
-                <p class="game-subtitle">Drag the cheese to feed Mickey Mouse. How fast can you score 10?</p>
+                <p class="section-tag">Mini Games</p>
+                <h2 class="section-title">Play the Magic</h2>
+                <p class="game-subtitle">Two Disney mini games — pick your adventure!</p>
             </div>
-            <div class="game-wrapper animate-on-scroll">
-                <div class="game-hud">
-                    <div class="game-score">Score: <span id="game-score">0</span></div>
-                    <div class="game-timer">Time: <span id="game-timer">0.0</span>s</div>
-                    <button class="btn-primary btn-sound" id="game-restart"
-                        style="padding:0.5rem 1.5rem;font-size:0.875rem">Restart</button>
+            <div class="game-tabs animate-on-scroll">
+                <button class="game-tab active" data-tab="mickey-game">🐭 Feed Mickey</button>
+                <button class="game-tab" data-tab="tink-game">🧚 Catch Tinkerbell's Dust</button>
+            </div>
+            <div class="game-panel active" id="mickey-game">
+                <div class="game-wrapper animate-on-scroll">
+                    <div class="game-hud">
+                        <div class="game-score">🧀 Score: <span id="game-score">0</span>/10</div>
+                        <div class="game-timer">⏱️ Time: <span id="game-timer">0.0</span>s</div>
+                        <div class="game-lives" id="game-lives">❤️❤️❤️</div>
+                        <div class="game-level" id="game-level">Level 1</div>
+                        <button class="btn-primary btn-sound" id="game-restart"
+                            style="padding:0.5rem 1.5rem;font-size:0.875rem;margin-left:auto">🔄 Restart</button>
+                    </div>
+                    <canvas id="game-canvas" width="700" height="450"></canvas>
+                    <p class="game-hint" id="game-hint">🧀 Click cheese to toss it to Mickey!</p>
                 </div>
-                <canvas id="game-canvas" width="700" height="450"></canvas>
-                <p class="game-hint" id="game-hint">🧀 Click cheese to toss it to Mickey!</p>
+            </div>
+            <div class="game-panel" id="tink-game">
+                <div class="tink-game-wrapper animate-on-scroll">
+                    <div class="tink-hud">
+                        <div class="tink-stat">✨ Dust: <span id="tink-score">0</span></div>
+                        <div class="tink-stat">⏱️ Time: <span id="tink-timer">30</span>s</div>
+                        <div class="tink-stat">🔥 Streak: <span id="tink-streak">0</span></div>
+                        <div class="tink-stat" style="margin-left:auto">⭐ Best: <span id="tink-best">0</span></div>
+                        <button class="btn-primary btn-sound" id="tink-restart"
+                            style="padding:0.5rem 1.5rem;font-size:0.875rem;background:linear-gradient(135deg,#7c3aed,#a855f7)">🔄 Play Again</button>
+                    </div>
+                    <canvas id="tink-game-canvas" width="700" height="480"></canvas>
+                    <p class="tink-hint" id="tink-hint">🧚 Click the glowing pixie dust orbs before they vanish!</p>
+                </div>
             </div>
         </div>
     </section>
-
-   
     <section class="worlds" id="worlds">
         <div class="container">
             <div class="section-header animate-on-scroll">
                 <p class="section-tag">Discover More</p>
                 <h2 class="section-title">Magical Worlds Await</h2>
             </div>
-
             <div class="story-row animate-on-scroll">
                 <div class="story-image">
                     <img src="images/story-enchanted.jpg" alt="Enchanted Worlds" loading="lazy" />
@@ -476,7 +857,6 @@
                         </svg></a>
                 </div>
             </div>
-
             <div class="story-row reverse animate-on-scroll">
                 <div class="story-image">
                     <img src="images/story-parks.jpg" alt="Parks & Experiences" loading="lazy" />
@@ -495,7 +875,6 @@
                         </svg></a>
                 </div>
             </div>
-
             <div class="story-row animate-on-scroll">
                 <div class="story-image">
                     <img src="images/story-streaming.jpg" alt="Disney+ Streaming" loading="lazy" />
@@ -516,7 +895,263 @@
             </div>
         </div>
     </section>
-
+    <section class="story-adventure" id="story-adventure">
+        <div class="sa-bg" aria-hidden="true">
+            <div class="sa-orb sa-orb-1"></div>
+            <div class="sa-orb sa-orb-2"></div>
+            <div class="sa-orb sa-orb-3"></div>
+        </div>
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-tag">Live the Story</p>
+                <h2 class="section-title">Your Disney Adventure</h2>
+                <p class="sa-intro">Step inside a Disney tale and shape its ending. Every choice you make writes a new chapter — where will the magic take you?</p>
+            </div>
+            <div class="sa-stage animate-on-scroll">
+                <div class="sa-screen sa-screen--active" id="sa-pick">
+                    <p class="sa-eyebrow">✦ Choose your guide ✦</p>
+                    <div class="sa-char-grid">
+                        <button class="sa-char-tile" data-char="mickey">
+                            <span class="sa-tile-glow" style="--gc:#FFD700"></span>
+                            <span class="sa-tile-emoji">🐭</span>
+                            <span class="sa-tile-name">Mickey Mouse</span>
+                            <span class="sa-tile-world">Toontown</span>
+                            <span class="sa-tile-hint">Courage &amp; Imagination</span>
+                        </button>
+                        <button class="sa-char-tile" data-char="elsa">
+                            <span class="sa-tile-glow" style="--gc:#A8EDFF"></span>
+                            <span class="sa-tile-emoji">❄️</span>
+                            <span class="sa-tile-name">Elsa</span>
+                            <span class="sa-tile-world">Arendelle</span>
+                            <span class="sa-tile-hint">Power &amp; Freedom</span>
+                        </button>
+                        <button class="sa-char-tile" data-char="simba">
+                            <span class="sa-tile-glow" style="--gc:#FF9500"></span>
+                            <span class="sa-tile-emoji">🦁</span>
+                            <span class="sa-tile-name">Simba</span>
+                            <span class="sa-tile-world">Pride Lands</span>
+                            <span class="sa-tile-hint">Heart &amp; Honour</span>
+                        </button>
+                        <button class="sa-char-tile" data-char="moana">
+                            <span class="sa-tile-glow" style="--gc:#00C6FF"></span>
+                            <span class="sa-tile-emoji">🌊</span>
+                            <span class="sa-tile-name">Moana</span>
+                            <span class="sa-tile-world">Motunui</span>
+                            <span class="sa-tile-hint">Voyage &amp; Purpose</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="sa-screen" id="sa-play">
+                    <div class="sa-bar">
+                        <div class="sa-guide-badge">
+                            <span class="sa-guide-icon" id="sa-guide-icon">🐭</span>
+                            <span class="sa-guide-label" id="sa-guide-label">Mickey</span>
+                        </div>
+                        <div class="sa-chapter-tag" id="sa-chapter-tag">Chapter 1</div>
+                        <button class="sa-restart" id="sa-restart" title="Start over">↺ Restart</button>
+                    </div>
+                    <div class="sa-scene" id="sa-scene">
+                        <div class="sa-scene-particles" id="sa-sparks"></div>
+                        <div class="sa-scene-emoji" id="sa-scene-emoji">🏰</div>
+                    </div>
+                    <div class="sa-dialogue">
+                        <div class="sa-dialogue-avatar" id="sa-avatar">🐭</div>
+                        <div class="sa-dialogue-body">
+                            <span id="sa-text"></span><span class="sa-caret">|</span>
+                        </div>
+                    </div>
+                    <div class="sa-choices" id="sa-choices"></div>
+                    <div class="sa-ending" id="sa-ending" hidden>
+                        <div class="sa-ending-stars" id="sa-ending-stars"></div>
+                        <div class="sa-ending-icon" id="sa-ending-icon">🌟</div>
+                        <h3 class="sa-ending-title" id="sa-ending-title">Happily Ever After</h3>
+                        <p class="sa-ending-body" id="sa-ending-body"></p>
+                        <div class="sa-ending-actions">
+                            <button class="sa-btn-gold" id="sa-replay">▶ Play Again</button>
+                            <button class="sa-btn-outline" id="sa-new-char">✦ New Character</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="founders-section" id="founders">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-tag">🎬 The Dreamers</p>
+                <h2 class="section-title">People Who Built the Magic</h2>
+                <p class="founders-subtitle">As you scroll, meet the visionaries who turned a dream into the greatest
+                    storytelling empire on Earth.</p>
+            </div>
+        </div>
+        <div class="founders-track" id="founders-track">
+            <div class="founder-sticky" style="z-index:1">
+                <div class="founder-card" style="--card-hue:215">
+                    <div class="founder-card-number">01</div>
+                    <div class="founder-card-body">
+                        <div class="founder-avatar">👔</div>
+                        <div class="founder-info">
+                            <span class="founder-role-tag">Co-Founder · The Businessman</span>
+                            <h3 class="founder-name">Roy O. Disney</h3>
+                            <p class="founder-years">1893 – 1971</p>
+                            <div class="founder-bio">
+                                <p>Roy Oliver Disney was Walt's older brother and the financial backbone of The Walt
+                                    Disney Company — the man who made the magic possible in the real world. While Walt
+                                    dreamed, Roy did the numbers, secured the loans, and kept the studio from collapsing
+                                    during its most fragile years.</p>
+                                <p>He personally negotiated the financing for <em>Snow White</em> when every banker in
+                                    Hollywood called it "Disney's Folly." When Walt died in 1966, Roy postponed his
+                                    retirement to see Walt Disney World completed, dedicating it to his brother's memory
+                                    just 71 days before his own death.</p>
+                                <p>Roy's quiet, steadfast dedication is the reason any of it exists at all.</p>
+                            </div>
+                            <div class="founder-tags">
+                                <span>📊 Financial Architect</span>
+                                <span>🏗️ Built Walt Disney World</span>
+                                <span>💼 55 Years of Service</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="founder-card-glow"></div>
+                </div>
+            </div>
+            <div class="founder-sticky" style="z-index:2">
+                <div class="founder-card" style="--card-hue:200">
+                    <div class="founder-card-number">02</div>
+                    <div class="founder-card-body">
+                        <div class="founder-avatar">✏️</div>
+                        <div class="founder-info">
+                            <span class="founder-role-tag">Co-Creator · The Animator</span>
+                            <h3 class="founder-name">Ub Iwerks</h3>
+                            <p class="founder-years">1901 – 1971</p>
+                            <div class="founder-bio">
+                                <p>Ub Iwerks was Walt Disney's oldest friend and the artistic genius who literally drew
+                                    Mickey Mouse into existence. When a rival studio poached all of Disney's animators
+                                    in 1928, Ub single-handedly animated the entire first Mickey short, <em>Plane
+                                        Crazy</em>, in just two weeks.</p>
+                                <p>He was so extraordinarily fast he could produce 700 drawings a day — an output no
+                                    other animator in history has matched. He later invented many of the multiplane
+                                    camera and special effects techniques that define classic Disney films.</p>
+                                <p>Without Ub's hands, there would be no Mickey, no Disney as we know it.</p>
+                            </div>
+                            <div class="founder-tags">
+                                <span>🐭 Drew Mickey Mouse</span>
+                                <span>🎥 Invented Multiplane Camera</span>
+                                <span>⚡ 700 Drawings/Day</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="founder-card-glow"></div>
+                </div>
+            </div>
+            <div class="founder-sticky" style="z-index:3">
+                <div class="founder-card" style="--card-hue:310">
+                    <div class="founder-card-number">03</div>
+                    <div class="founder-card-body">
+                        <div class="founder-avatar">🎨</div>
+                        <div class="founder-info">
+                            <span class="founder-role-tag">Concept Artist · The Visionary</span>
+                            <h3 class="founder-name">Mary Blair</h3>
+                            <p class="founder-years">1911 – 1978</p>
+                            <div class="founder-bio">
+                                <p>Mary Blair was the colour soul of Disney's Golden Age. Her bold, brilliantly
+                                    saturated style defined the look of <em>Cinderella</em>, <em>Alice in
+                                        Wonderland</em>, and <em>Peter Pan</em>. Walt Disney called her his favourite
+                                    artist and gave her an influence almost no other woman in Hollywood had in the
+                                    1940s.</p>
+                                <p>She was one of the few women at Disney to travel on the 1941 South American research
+                                    trip, and her sketches directly inspired <em>Saludos Amigos</em>. Her most visible
+                                    legacy — the iconic 90-foot mural in Tomorrowland at Walt Disney World — still
+                                    stands today.</p>
+                                <p>Her fearless use of colour changed what animation was allowed to look like forever.
+                                </p>
+                            </div>
+                            <div class="founder-tags">
+                                <span>🎠 It's a Small World</span>
+                                <span>🌈 Colour Visionary</span>
+                                <span>👑 Walt's Favourite Artist</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="founder-card-glow"></div>
+                </div>
+            </div>
+            <div class="founder-sticky" style="z-index:4">
+                <div class="founder-card" style="--card-hue:160">
+                    <div class="founder-card-number">04</div>
+                    <div class="founder-card-body">
+                        <div class="founder-avatar">🎭</div>
+                        <div class="founder-info">
+                            <span class="founder-role-tag">Nine Old Men · The Heart</span>
+                            <h3 class="founder-name">Frank Thomas &amp; Ollie Johnston</h3>
+                            <p class="founder-years">The Inseparable Duo</p>
+                            <div class="founder-bio">
+                                <p>Frank Thomas and Ollie Johnston were two of Walt's legendary "Nine Old Men" — the
+                                    core group of animators who defined the 12 principles of animation that every
+                                    animator in the world still learns today. They were best friends for over 70 years.
+                                </p>
+                                <p>Together they wrote <em>The Illusion of Life: Disney Animation</em> — the single
+                                    most important book ever published about animation. Frank animated the dwarfs
+                                    weeping over Snow White's coffin. Ollie gave Bambi his innocence and Pinocchio his
+                                    longing to be real.</p>
+                                <p>They didn't just animate characters — they gave them souls you could feel in your
+                                    chest.</p>
+                            </div>
+                            <div class="founder-tags">
+                                <span>📚 Wrote The Illusion of Life</span>
+                                <span>💔 Snow White's Grief Scene</span>
+                                <span>🦌 Gave Bambi His Soul</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="founder-card-glow"></div>
+                </div>
+            </div>
+            <div class="founder-sticky" style="z-index:5">
+                <div class="founder-card founder-card-walt" style="--card-hue:42">
+                    <div class="founder-card-number walt-num">★</div>
+                    <div class="founder-card-body">
+                        <div class="founder-avatar walt-avatar">🎩</div>
+                        <div class="founder-info">
+                            <span class="founder-role-tag walt-tag">The Dreamer · The Creator · The Man</span>
+                            <h3 class="founder-name walt-name">Walt Disney</h3>
+                            <p class="founder-years">1901 – 1966</p>
+                            <div class="founder-bio">
+                                <p>Walter Elias Disney was not just the founder of a studio — he was the architect of
+                                    wonder itself. Born in Chicago in 1901, he failed at dozens of ventures before a
+                                    little mouse changed everything. He had no formal art training. He was rejected by
+                                    302 banks before one said yes to Disneyland.</p>
+                                <p>He made it anyway. <em>Snow White</em>, <em>Fantasia</em>, <em>Bambi</em>,
+                                    <em>Cinderella</em> — he was personally involved in every frame. He pioneered
+                                    television when Hollywood mocked it. He built Disneyland when everyone said a theme
+                                    park for families was a foolish idea.
+                                </p>
+                                <p>Walt held 32 Academy Awards — more than any individual in history. He built the most
+                                    beloved entertainment company on earth from a garage, a borrowed $500, and a belief
+                                    that has never faded: <em>"It all started with a mouse."</em></p>
+                            </div>
+                            <div class="founder-tags walt-tags">
+                                <span>🏆 32 Academy Awards</span>
+                                <span>🐭 Created Mickey Mouse</span>
+                                <span>🏰 Built Disneyland</span>
+                                <span>🎬 Father of Modern Animation</span>
+                            </div>
+                            <div class="walt-quote">"All our dreams can come true — if we have the courage to pursue
+                                them."</div>
+                        </div>
+                    </div>
+                    <div class="founder-card-glow walt-glow"></div>
+                    <div class="walt-stars" aria-hidden="true">
+                        <span>✦</span><span>✧</span><span>✦</span><span>✧</span>
+                        <span>★</span><span>✦</span><span>✧</span><span>★</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="founders-progress-bar">
+            <div class="founders-progress-fill" id="founders-progress"></div>
+        </div>
+    </section>
     <footer id="footer">
         <div class="container footer-grid">
             <div class="footer-brand">
@@ -555,7 +1190,7 @@
             </div>
         </div>
         <div class="container footer-bottom">
-            <p>© 2026 Disney. Reimagined with ❤️ for the hackathon.</p>
+            <p>© 2026 Disney. Made with ❤️ by DOMinators.</p>
             <div class="footer-legal">
                 <a href="#">Privacy</a>
                 <a href="#">Terms</a>
@@ -563,9 +1198,7 @@
             </div>
         </div>
     </footer>
-
     <script src="script.js"></script>
 </body>
-
 
 </html>
