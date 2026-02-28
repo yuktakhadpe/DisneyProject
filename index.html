@@ -15,36 +15,37 @@
 
 <body>
 
-    <!-- LOADING SCREEN -->
+    
     <div id="loading-screen">
         <div class="loader-content">
             <svg class="castle-svg" viewBox="0 0 200 180" fill="none" stroke="var(--gold)" stroke-width="1.2">
-                <!-- Main towers -->
+                
                 <line x1="60" y1="180" x2="60" y2="60" class="castle-line" />
                 <line x1="140" y1="180" x2="140" y2="60" class="castle-line" />
-                <!-- Center tall tower -->
+               
+                
                 <line x1="100" y1="180" x2="100" y2="30" class="castle-line" />
                 <polygon points="100,10 90,30 110,30" class="castle-line" />
-                <!-- Side spires -->
+                 
                 <line x1="75" y1="180" x2="75" y2="70" class="castle-line" />
                 <polygon points="75,50 68,70 82,70" class="castle-line" />
                 <line x1="125" y1="180" x2="125" y2="70" class="castle-line" />
                 <polygon points="125,50 118,70 132,70" class="castle-line" />
-                <!-- Outer towers -->
+                
                 <line x1="45" y1="180" x2="45" y2="90" class="castle-line" />
                 <polygon points="45,72 38,90 52,90" class="castle-line" />
                 <line x1="155" y1="180" x2="155" y2="90" class="castle-line" />
                 <polygon points="155,72 148,90 162,90" class="castle-line" />
-                <!-- Castle body -->
+                
                 <rect x="50" y="110" width="100" height="70" rx="2" class="castle-line" />
-                <!-- Gate arch -->
+                
                 <path d="M90,180 L90,145 Q100,130 110,145 L110,180" class="castle-line" />
-                <!-- Gate circle -->
+                
                 <circle cx="100" cy="150" r="5" class="castle-line" />
-                <!-- Windows -->
+                
                 <rect x="65" y="120" width="8" height="12" rx="4" class="castle-line" />
                 <rect x="127" y="120" width="8" height="12" rx="4" class="castle-line" />
-                <!-- Bridge lines -->
+                
                 <line x1="30" y1="180" x2="170" y2="180" class="castle-line" />
             </svg>
             <p class="loader-text">W H E R E &nbsp; M A G I C &nbsp; L I V E S</p>
@@ -54,13 +55,12 @@
         </div>
     </div>
 
-    <!-- THREE.JS CANVAS -->
+    
     <canvas id="magic-canvas"></canvas>
 
-    <!-- SPARKLE CURSOR TRAIL -->
     <canvas id="sparkle-canvas"></canvas>
 
-    <!-- NAVBAR -->
+    
     <nav id="navbar">
         <div class="nav-inner">
             <a href="#" class="nav-logo">
@@ -96,7 +96,7 @@
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
+
     <section class="hero" id="hero">
         <div class="hero-bg">
             <div class="hero-image-wrapper">
@@ -106,7 +106,7 @@
             </div>
             <div class="hero-overlay"></div>
             <div class="hero-overlay-gradient"></div>
-            <!-- Floating sparkles -->
+            
             <div class="floating-sparkle sparkle-1"></div>
             <div class="floating-sparkle sparkle-2"></div>
             <div class="floating-sparkle sparkle-3"></div>
@@ -142,12 +142,12 @@
                 <polyline points="6 9 12 15 18 9" />
             </svg>
         </div>
-        <!-- Decorative elements -->
+        
         <div class="hero-decoration decoration-left"></div>
         <div class="hero-decoration decoration-right"></div>
     </section>
 
-    <!-- CHARACTERS SECTION -->
+ 
     <section class="characters" id="characters">
         <div class="container">
             <div class="section-header animate-on-scroll">
@@ -198,7 +198,7 @@
         </div>
     </section>
 
-    <!-- STATS SECTION -->
+   
     <section class="stats" id="stats">
         <div class="stats-bg"></div>
         <div class="container stats-inner">
@@ -231,9 +231,7 @@
     </section>
 
 
-    <!-- ═══════════════════════════════════════════
-         CHARACTER PICKER + CUSTOM CURSOR SECTION
-         ═══════════════════════════════════════════ -->
+   
     <section class="char-picker-section" id="char-picker">
         <div class="container">
             <div class="section-header animate-on-scroll">
@@ -245,7 +243,7 @@
 
             <div class="char-picker-grid animate-on-scroll">
 
-                <!-- MICKEY -->
+                
                 <button class="char-pick-btn" data-char="mickey" aria-label="Choose Mickey Mouse">
                     <div class="char-pick-aura" style="--aura-color:#FFD700"></div>
                     <div class="char-pick-emoji">🐭</div>
@@ -255,7 +253,6 @@
                     <div class="char-pick-check">✓</div>
                 </button>
 
-                <!-- MOANA -->
                 <button class="char-pick-btn" data-char="moana" aria-label="Choose Moana">
                     <div class="char-pick-aura" style="--aura-color:#00C6FF"></div>
                     <div class="char-pick-emoji">🌊</div>
@@ -265,7 +262,7 @@
                     <div class="char-pick-check">✓</div>
                 </button>
 
-                <!-- SIMBA -->
+                
                 <button class="char-pick-btn" data-char="simba" aria-label="Choose Simba">
                     <div class="char-pick-aura" style="--aura-color:#FF9500"></div>
                     <div class="char-pick-emoji">🦁</div>
@@ -275,7 +272,7 @@
                     <div class="char-pick-check">✓</div>
                 </button>
 
-                <!-- ELSA -->
+              
                 <button class="char-pick-btn" data-char="elsa" aria-label="Choose Elsa">
                     <div class="char-pick-aura" style="--aura-color:#A8EDFF"></div>
                     <div class="char-pick-emoji">❄️</div>
@@ -287,7 +284,7 @@
 
             </div>
 
-            <!-- Active character display -->
+          
             <div class="char-pick-active animate-on-scroll" id="char-pick-active">
                 <div class="char-pick-active-inner">
                     <span class="char-pick-active-emoji" id="char-active-emoji">🐭</span>
@@ -300,13 +297,10 @@
             </div>
         </div>
 
-        <!-- The emoji cursor follower -->
+        
         <div class="emoji-cursor" id="emoji-cursor" aria-hidden="true"></div>
     </section>
 
-    <!-- ═══════════════════════════════════════════
-         SWIPE COMIC STORY CARDS
-         ═══════════════════════════════════════════ -->
     <section class="comic-section" id="comic-section">
         <div class="container">
             <div class="section-header animate-on-scroll">
@@ -317,10 +311,10 @@
 
             <div class="comic-stage animate-on-scroll">
 
-                <!-- Stack of cards -->
+            
                 <div class="comic-deck" id="comic-deck">
 
-                    <!-- Page 5 (bottom of stack) -->
+                  
                     <div class="comic-card" data-page="5" style="--stack-i:4">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#0a0020,#1a0040)">
                             <div class="comic-page-num">Page 5 · The End</div>
@@ -337,7 +331,7 @@
                         </div>
                     </div>
 
-                    <!-- Page 4 -->
+                  
                     <div class="comic-card" data-page="4" style="--stack-i:3">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#001a2e,#004466)">
                             <div class="comic-page-num">Page 4 · The Challenge</div>
@@ -353,7 +347,7 @@
                         </div>
                     </div>
 
-                    <!-- Page 3 -->
+                    
                     <div class="comic-card" data-page="3" style="--stack-i:2">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#0f1a00,#2a4400)">
                             <div class="comic-page-num">Page 3 · The Rescue</div>
@@ -370,7 +364,7 @@
                         </div>
                     </div>
 
-                    <!-- Page 2 -->
+                   
                     <div class="comic-card" data-page="2" style="--stack-i:1">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#001028,#002a5c)">
                             <div class="comic-page-num">Page 2 · The Journey</div>
@@ -387,7 +381,7 @@
                         </div>
                     </div>
 
-                    <!-- Page 1 (top of stack — visible first) -->
+                    
                     <div class="comic-card" data-page="1" style="--stack-i:0">
                         <div class="comic-card-inner" style="background:linear-gradient(145deg,#1a0800,#5c2800)">
                             <div class="comic-page-num">Page 1 · The Beginning</div>
@@ -404,9 +398,9 @@
                         </div>
                     </div>
 
-                </div><!-- /comic-deck -->
+                </div>
 
-                <!-- Controls -->
+               
                 <div class="comic-controls">
                     <button class="comic-btn comic-btn-prev" id="comic-prev" aria-label="Previous page">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -431,11 +425,11 @@
 
                 <p class="comic-swipe-hint" id="comic-hint">👆 Swipe or click → to turn the page</p>
 
-            </div><!-- /comic-stage -->
+            </div>
         </div>
     </section>
 
-    <!-- MICKEY CHEESE GAME -->
+    
     <section class="game-section" id="game">
         <div class="container">
             <div class="section-header animate-on-scroll">
@@ -456,7 +450,7 @@
         </div>
     </section>
 
-    <!-- WORLDS / STORY CARDS SECTION -->
+   
     <section class="worlds" id="worlds">
         <div class="container">
             <div class="section-header animate-on-scroll">
@@ -523,7 +517,6 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer id="footer">
         <div class="container footer-grid">
             <div class="footer-brand">
@@ -573,5 +566,6 @@
 
     <script src="script.js"></script>
 </body>
+
 
 </html>
