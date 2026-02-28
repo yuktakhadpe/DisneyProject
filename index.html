@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Disney — Where Stories Come Alive</title>
+    <meta name="description" content="Reimagine Disney as a magical, immersive storytelling experience." />
+    <link rel="stylesheet" href="style.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Quicksand:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+</head>
+
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="loader-content">
+            <svg class="castle-svg" viewBox="0 0 200 180" fill="none" stroke="var(--gold)" stroke-width="1.2">
+                <!-- Main towers -->
+                <line x1="60" y1="180" x2="60" y2="60" class="castle-line" />
+                <line x1="140" y1="180" x2="140" y2="60" class="castle-line" />
+                <!-- Center tall tower -->
+                <line x1="100" y1="180" x2="100" y2="30" class="castle-line" />
+                <polygon points="100,10 90,30 110,30" class="castle-line" />
+                <!-- Side spires -->
+                <line x1="75" y1="180" x2="75" y2="70" class="castle-line" />
+                <polygon points="75,50 68,70 82,70" class="castle-line" />
+                <line x1="125" y1="180" x2="125" y2="70" class="castle-line" />
+                <polygon points="125,50 118,70 132,70" class="castle-line" />
+                <!-- Outer towers -->
+                <line x1="45" y1="180" x2="45" y2="90" class="castle-line" />
+                <polygon points="45,72 38,90 52,90" class="castle-line" />
+                <line x1="155" y1="180" x2="155" y2="90" class="castle-line" />
+                <polygon points="155,72 148,90 162,90" class="castle-line" />
+                <!-- Castle body -->
+                <rect x="50" y="110" width="100" height="70" rx="2" class="castle-line" />
+                <!-- Gate arch -->
+                <path d="M90,180 L90,145 Q100,130 110,145 L110,180" class="castle-line" />
+                <!-- Gate circle -->
+                <circle cx="100" cy="150" r="5" class="castle-line" />
+                <!-- Windows -->
+                <rect x="65" y="120" width="8" height="12" rx="4" class="castle-line" />
+                <rect x="127" y="120" width="8" height="12" rx="4" class="castle-line" />
+                <!-- Bridge lines -->
+                <line x1="30" y1="180" x2="170" y2="180" class="castle-line" />
+            </svg>
+            <p class="loader-text">W H E R E &nbsp; M A G I C &nbsp; L I V E S</p>
+            <div class="loader-bar">
+                <div class="loader-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- THREE.JS CANVAS -->
+    <canvas id="magic-canvas"></canvas>
+
+    <!-- SPARKLE CURSOR TRAIL -->
+    <canvas id="sparkle-canvas"></canvas>
+
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">
+                <img src="images/disney-logo.png" alt="Disney" class="nav-logo-img" />
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#characters" class="nav-sound">Characters</a>
+                <a href="#stats" class="nav-sound">Legacy</a>
+                <a href="#worlds" class="nav-sound">Worlds</a>
+                <a href="#game" class="nav-sound">Play</a>
+                <a href="#footer" class="nav-sound">Connect</a>
+                <button class="btn-disney-plus nav-sound">Disney+</button>
+            </div>
+            <div class="nav-right">
+                <button class="sound-toggle" id="sound-toggle" aria-label="Toggle sound" title="Toggle sound">
+                    <svg class="sound-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                    </svg>
+                    <svg class="sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" style="display:none">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                        <line x1="23" y1="9" x2="17" y2="15" />
+                        <line x1="17" y1="9" x2="23" y2="15" />
+                    </svg>
+                </button>
+                <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="hero-image-wrapper">
+                <img src="Gemini_Generated_Image_gtk58ogtk58ogtk5.png" alt="Magical Princess and Castle"
+                    class="hero-main-image" />
+                <div class="hero-image-glow"></div>
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="hero-overlay-gradient"></div>
+            <!-- Floating sparkles -->
+            <div class="floating-sparkle sparkle-1"></div>
+            <div class="floating-sparkle sparkle-2"></div>
+            <div class="floating-sparkle sparkle-3"></div>
+            <div class="floating-sparkle sparkle-4"></div>
+            <div class="floating-sparkle sparkle-5"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text-wrapper">
+                <p class="hero-tag hero-fade-in">Welcome to a World of Wonder</p>
+                <h1 class="hero-title hero-slide-up">
+                    <span class="title-line-1">Once Upon</span>
+                    <span class="title-line-2">A Dream</span>
+                </h1>
+                <p class="hero-desc hero-fade-in-delay">Step into an immersive storytelling experience where princesses,
+                    castles, and magical adventures come to life. Explore beloved characters, enchanting worlds, and
+                    unforgettable journeys.</p>
+                <div class="hero-buttons hero-fade-in-delay-2">
+                    <button class="btn-primary btn-sound"
+                        onclick="document.getElementById('characters').scrollIntoView({behavior:'smooth'})">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                        Start Your Journey
+                    </button>
+                    <button class="btn-outline btn-sound"
+                        onclick="document.getElementById('worlds').scrollIntoView({behavior:'smooth'})">Explore
+                        Worlds</button>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9" />
+            </svg>
+        </div>
+        <!-- Decorative elements -->
+        <div class="hero-decoration decoration-left"></div>
+        <div class="hero-decoration decoration-right"></div>
+    </section>
+
+    <!-- CHARACTERS SECTION -->
+    <section class="characters" id="characters">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-tag">Meet the Magic</p>
+                <h2 class="section-title">Beloved Characters</h2>
+            </div>
+            <div class="characters-grid">
+                <div class="character-card animate-on-scroll" data-index="0">
+                    <div class="character-image">
+                        <img src="images/char-mickey.jpg" alt="Mickey Mouse" loading="lazy" />
+                        <div class="character-overlay overlay-gold"></div>
+                        <div class="character-overlay-bottom"></div>
+                    </div>
+                    <div class="character-info">
+                        <p class="character-world">Toontown</p>
+                        <h3 class="character-name">Mickey Mouse</h3>
+                        <p class="character-desc">The iconic dreamer who started it all. A symbol of joy, imagination,
+                            and the magic of believing.</p>
+                    </div>
+                </div>
+                <div class="character-card animate-on-scroll" data-index="1">
+                    <div class="character-image">
+                        <img src="images/char-simba.jpg" alt="Simba" loading="lazy" />
+                        <div class="character-overlay overlay-amber"></div>
+                        <div class="character-overlay-bottom"></div>
+                    </div>
+                    <div class="character-info">
+                        <p class="character-world">Pride Lands</p>
+                        <h3 class="character-name">Simba</h3>
+                        <p class="character-desc">A young lion destined for greatness. His journey teaches courage,
+                            responsibility, and the circle of life.</p>
+                    </div>
+                </div>
+                <div class="character-card animate-on-scroll" data-index="2">
+                    <div class="character-image">
+                        <img src="images/char-moana.jpg" alt="Moana" loading="lazy" />
+                        <div class="character-overlay overlay-blue"></div>
+                        <div class="character-overlay-bottom"></div>
+                    </div>
+                    <div class="character-info">
+                        <p class="character-world">Motunui</p>
+                        <h3 class="character-name">Moana</h3>
+                        <p class="character-desc">A brave ocean voyager who follows her heart beyond the reef to save
+                            her people and restore balance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="stats" id="stats">
+        <div class="stats-bg"></div>
+        <div class="container stats-inner">
+            <div class="section-header animate-on-scroll">
+                <svg class="sparkle-icon sparkle-anim" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M12 3l1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3z" />
+                </svg>
+                <h2 class="section-title">A Legacy of Magic</h2>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item animate-on-scroll">
+                    <p class="stat-value" data-target="100">0</p><span class="stat-plus">+</span>
+                    <p class="stat-label">Years of Magic</p>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <p class="stat-value" data-target="500">0</p><span class="stat-plus">+</span>
+                    <p class="stat-label">Beloved Films</p>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <p class="stat-value" data-target="12">0</p><span class="stat-plus"></span>
+                    <p class="stat-label">Theme Parks</p>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <p class="stat-value" data-target="200">0</p><span class="stat-plus">M+</span>
+                    <p class="stat-label">Disney+ Subscribers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════
+         CHARACTER PICKER + CUSTOM CURSOR SECTION
+         ═══════════════════════════════════════════ -->
+    <section class="char-picker-section" id="char-picker">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-tag">✨ Make It Yours</p>
+                <h2 class="section-title">Who's Your Favourite?</h2>
+                <p class="char-picker-subtitle">Pick your favourite Disney friend — they'll follow your cursor
+                    everywhere!</p>
+            </div>
+
+            <div class="char-picker-grid animate-on-scroll">
+
+                <!-- MICKEY -->
+                <button class="char-pick-btn" data-char="mickey" aria-label="Choose Mickey Mouse">
+                    <div class="char-pick-aura" style="--aura-color:#FFD700"></div>
+                    <div class="char-pick-emoji">🐭</div>
+                    <div class="char-pick-ring"></div>
+                    <span class="char-pick-name">Mickey Mouse</span>
+                    <span class="char-pick-world">Toontown</span>
+                    <div class="char-pick-check">✓</div>
+                </button>
+
+                <!-- MOANA -->
+                <button class="char-pick-btn" data-char="moana" aria-label="Choose Moana">
+                    <div class="char-pick-aura" style="--aura-color:#00C6FF"></div>
+                    <div class="char-pick-emoji">🌊</div>
+                    <div class="char-pick-ring"></div>
+                    <span class="char-pick-name">Moana</span>
+                    <span class="char-pick-world">Motunui</span>
+                    <div class="char-pick-check">✓</div>
+                </button>
+
+                <!-- SIMBA -->
+                <button class="char-pick-btn" data-char="simba" aria-label="Choose Simba">
+                    <div class="char-pick-aura" style="--aura-color:#FF9500"></div>
+                    <div class="char-pick-emoji">🦁</div>
+                    <div class="char-pick-ring"></div>
+                    <span class="char-pick-name">Simba</span>
+                    <span class="char-pick-world">Pride Lands</span>
+                    <div class="char-pick-check">✓</div>
+                </button>
+
+                <!-- ELSA -->
+                <button class="char-pick-btn" data-char="elsa" aria-label="Choose Elsa">
+                    <div class="char-pick-aura" style="--aura-color:#A8EDFF"></div>
+                    <div class="char-pick-emoji">❄️</div>
+                    <div class="char-pick-ring"></div>
+                    <span class="char-pick-name">Elsa</span>
+                    <span class="char-pick-world">Arendelle</span>
+                    <div class="char-pick-check">✓</div>
+                </button>
+
+            </div>
+
+            <!-- Active character display -->
+            <div class="char-pick-active animate-on-scroll" id="char-pick-active">
+                <div class="char-pick-active-inner">
+                    <span class="char-pick-active-emoji" id="char-active-emoji">🐭</span>
+                    <div class="char-pick-active-text">
+                        <p class="char-pick-active-label">Cursor mode active!</p>
+                        <p class="char-pick-active-name" id="char-active-name">Mickey Mouse is following you!</p>
+                    </div>
+                    <button class="char-pick-reset" id="char-pick-reset" onclick="resetCharCursor()">Reset ×</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- The emoji cursor follower -->
+        <div class="emoji-cursor" id="emoji-cursor" aria-hidden="true"></div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SWIPE COMIC STORY CARDS
+         ═══════════════════════════════════════════ -->
+    <section class="comic-section" id="comic-section">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-tag">📖 Mini Comics</p>
+                <h2 class="section-title">Story Time!</h2>
+                <p class="comic-subtitle">Swipe right to flip through the pages ✨</p>
+            </div>
+
+            <div class="comic-stage animate-on-scroll">
+
+                <!-- Stack of cards -->
+                <div class="comic-deck" id="comic-deck">
+
+                    <!-- Page 5 (bottom of stack) -->
+                    <div class="comic-card" data-page="5" style="--stack-i:4">
+                        <div class="comic-card-inner" style="background:linear-gradient(145deg,#0a0020,#1a0040)">
+                            <div class="comic-page-num">Page 5 · The End</div>
+                            <div class="comic-art">🌟</div>
+                            <div class="comic-title">Happily Ever After</div>
+                            <div class="comic-text">
+                                Mickey bowed, Moana surfed the last wave home, Simba roared at the sunset, and Elsa let
+                                it go — one last time. Magic fills every corner of the Disney kingdom. <em>Your
+                                    adventure starts here.</em>
+                            </div>
+                            <div class="comic-footer">
+                                <span class="comic-char-tag">🐭 🌊 🦁 ❄️ All Together</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page 4 -->
+                    <div class="comic-card" data-page="4" style="--stack-i:3">
+                        <div class="comic-card-inner" style="background:linear-gradient(145deg,#001a2e,#004466)">
+                            <div class="comic-page-num">Page 4 · The Challenge</div>
+                            <div class="comic-art">🌊</div>
+                            <div class="comic-title">Beyond the Reef</div>
+                            <div class="comic-text">
+                                Moana spotted a stormy sea between them and the magic island. The others were scared —
+                                but Moana just smiled and raised her oar. <em>"The ocean chose us. Let's go!"</em>
+                            </div>
+                            <div class="comic-footer">
+                                <span class="comic-char-tag">🌊 Moana's Chapter</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page 3 -->
+                    <div class="comic-card" data-page="3" style="--stack-i:2">
+                        <div class="comic-card-inner" style="background:linear-gradient(145deg,#0f1a00,#2a4400)">
+                            <div class="comic-page-num">Page 3 · The Rescue</div>
+                            <div class="comic-art">🦁</div>
+                            <div class="comic-title">Roar to the Rescue</div>
+                            <div class="comic-text">
+                                A mischievous hyena blocked the path! Simba stepped forward, took a deep breath, and let
+                                out a roar that shook the whole jungle. The path was clear. <em>"Remember who you
+                                    are,"</em> he whispered.
+                            </div>
+                            <div class="comic-footer">
+                                <span class="comic-char-tag">🦁 Simba's Chapter</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page 2 -->
+                    <div class="comic-card" data-page="2" style="--stack-i:1">
+                        <div class="comic-card-inner" style="background:linear-gradient(145deg,#001028,#002a5c)">
+                            <div class="comic-page-num">Page 2 · The Journey</div>
+                            <div class="comic-art">❄️</div>
+                            <div class="comic-title">Elsa Lights the Way</div>
+                            <div class="comic-text">
+                                The forest was dark and the friends were lost — until Elsa raised her hand. Ice crystals
+                                shot into the sky like a thousand lanterns, painting the night blue and silver.
+                                <em>"Follow the stars I made!"</em>
+                            </div>
+                            <div class="comic-footer">
+                                <span class="comic-char-tag">❄️ Elsa's Chapter</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page 1 (top of stack — visible first) -->
+                    <div class="comic-card" data-page="1" style="--stack-i:0">
+                        <div class="comic-card-inner" style="background:linear-gradient(145deg,#1a0800,#5c2800)">
+                            <div class="comic-page-num">Page 1 · The Beginning</div>
+                            <div class="comic-art">🐭</div>
+                            <div class="comic-title">Mickey's Big Idea</div>
+                            <div class="comic-text">
+                                One sunny morning, Mickey Mouse had his biggest idea yet — what if all his Disney
+                                friends went on one <em>grand adventure together</em>? He grabbed his magic hat, sent
+                                out sparkle-mail to everyone, and waited by the Wishing Well…
+                            </div>
+                            <div class="comic-footer">
+                                <span class="comic-char-tag">🐭 Mickey's Chapter</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /comic-deck -->
+
+                <!-- Controls -->
+                <div class="comic-controls">
+                    <button class="comic-btn comic-btn-prev" id="comic-prev" aria-label="Previous page">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <div class="comic-dots" id="comic-dots">
+                        <span class="comic-dot active" data-dot="0"></span>
+                        <span class="comic-dot" data-dot="1"></span>
+                        <span class="comic-dot" data-dot="2"></span>
+                        <span class="comic-dot" data-dot="3"></span>
+                        <span class="comic-dot" data-dot="4"></span>
+                    </div>
+                    <button class="comic-btn comic-btn-next" id="comic-next" aria-label="Next page">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+                </div>
+
+                <p class="comic-swipe-hint" id="comic-hint">👆 Swipe or click → to turn the page</p>
+
+            </div><!-- /comic-stage -->
+        </div>
+    </section>
+
+    <!-- MICKEY CHEESE GAME -->
+    <section class="game-section" id="game">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-tag">Play a Game</p>
+                <h2 class="section-title">Feed Mickey!</h2>
+                <p class="game-subtitle">Drag the cheese to feed Mickey Mouse. How fast can you score 10?</p>
+            </div>
+            <div class="game-wrapper animate-on-scroll">
+                <div class="game-hud">
+                    <div class="game-score">Score: <span id="game-score">0</span></div>
+                    <div class="game-timer">Time: <span id="game-timer">0.0</span>s</div>
+                    <button class="btn-primary btn-sound" id="game-restart"
+                        style="padding:0.5rem 1.5rem;font-size:0.875rem">Restart</button>
+                </div>
+                <canvas id="game-canvas" width="700" height="450"></canvas>
+                <p class="game-hint" id="game-hint">🧀 Click cheese to toss it to Mickey!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORLDS / STORY CARDS SECTION -->
+    <section class="worlds" id="worlds">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <p class="section-tag">Discover More</p>
+                <h2 class="section-title">Magical Worlds Await</h2>
+            </div>
+
+            <div class="story-row animate-on-scroll">
+                <div class="story-image">
+                    <img src="images/story-enchanted.jpg" alt="Enchanted Worlds" loading="lazy" />
+                    <div class="story-image-overlay"></div>
+                    <span class="story-badge">Stories</span>
+                </div>
+                <div class="story-content">
+                    <p class="story-subtitle">Explore magical realms</p>
+                    <h3 class="story-title">Enchanted Worlds</h3>
+                    <p class="story-desc">Dive deep into the enchanted forests, underwater kingdoms, and galactic
+                        adventures that define Disney storytelling.</p>
+                    <a href="#" class="story-link">Explore <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+            </div>
+
+            <div class="story-row reverse animate-on-scroll">
+                <div class="story-image">
+                    <img src="images/story-parks.jpg" alt="Parks & Experiences" loading="lazy" />
+                    <div class="story-image-overlay"></div>
+                    <span class="story-badge">Experiences</span>
+                </div>
+                <div class="story-content">
+                    <p class="story-subtitle">Live the magic</p>
+                    <h3 class="story-title">Parks & Experiences</h3>
+                    <p class="story-desc">From Disneyland to Disney World, step into real-life fairy tales with
+                        immersive theme parks across the globe.</p>
+                    <a href="#" class="story-link">Explore <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+            </div>
+
+            <div class="story-row animate-on-scroll">
+                <div class="story-image">
+                    <img src="images/story-streaming.jpg" alt="Disney+ Streaming" loading="lazy" />
+                    <div class="story-image-overlay"></div>
+                    <span class="story-badge">Stream</span>
+                </div>
+                <div class="story-content">
+                    <p class="story-subtitle">Magic at your fingertips</p>
+                    <h3 class="story-title">Disney+ Streaming</h3>
+                    <p class="story-desc">Access thousands of movies, series, and exclusive originals. Your favorite
+                        stories, anytime, anywhere.</p>
+                    <a href="#" class="story-link">Explore <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="nav-logo">
+                    <img src="images/disney-logo.png" alt="Disney" class="nav-logo-img" style="height:40px;" />
+                </div>
+                <p class="footer-tagline">Where imagination knows no bounds and every story is an adventure waiting to
+                    unfold.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="#">Movies</a></li>
+                    <li><a href="#">Series</a></li>
+                    <li><a href="#">Characters</a></li>
+                    <li><a href="#">Theme Parks</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Disney+</h4>
+                <ul>
+                    <li><a href="#">Subscribe</a></li>
+                    <li><a href="#">Originals</a></li>
+                    <li><a href="#">Collections</a></li>
+                    <li><a href="#">Family</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>© 2026 Disney. Reimagined with ❤️ for the hackathon.</p>
+            <div class="footer-legal">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
